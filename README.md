@@ -2,19 +2,23 @@
 
 # Alex O'Keeffe, Tyson Freeze, Chase Duggan
 
-# 1. We are going to make the game (Tetris or minesweeper)
+# 1. We are going to make the game Tetris
 
-# 2. We are coding in Python, using the arcade and random, libraries
+# 2. We are coding in Python, using the arcade and random libraries
 
 # 3. Features will include:
-#   Tetris:
-#       Score, level, instrucitons with key bindings, game over screen, setting (change key bindings and music volume)?
-#   Minesweeper:
-#       Different levels (easy, meduim, hard), different board sizes? number of mines left, clock
+#       Alpa Release:
+#           Display Grid, spawn a tetrimino, move tetrimino, Tetrimino stops when it hits another tetrimino, primative image and sound assests
+#       Beta Release:
+#           rotate tetriminos, and clear rows, spawn random tetrimino, next 4 tetiminos, score
+#       Release Candidate:
+#           Store tetrimino, controls screen, level (increases every 1000 points), High score, final image and sound assests
+#       Stable Release:
+#           screen shake, bug fixes
 
 # 4. Time line being
-#   Week one 11/15/21 have core game done
-#   Week two 11/22/21 some debugging (thanksgiving week) Alex will be traveling
-#   week three 11/29/21 main debugging and polishing
-#   week four 12/6/21 finishing touches on game
+#   Week one 11/15/21 Alpha Release
+#   Week two 11/22/21 Beta Release (thanksgiving week)
+#   week three 11/29/21 Release Candidate
+#   week four 12/6/21 Stable Release
 # due 12/11/21
