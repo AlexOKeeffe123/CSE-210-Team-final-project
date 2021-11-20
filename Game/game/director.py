@@ -36,6 +36,8 @@ class Director(arcade.Window):
         self.spawnTetromino()
         self.createBorders()
 
+        arcade.play_sound(arcade.load_sound("Game/game/Assets/sound/backgroundmusic.mp3"))
+
         arcade.schedule(self.moveTetromino, 0.25)
 
     def on_draw(self):
