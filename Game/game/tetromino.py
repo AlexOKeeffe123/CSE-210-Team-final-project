@@ -57,3 +57,15 @@ class Tetromino():
             bitMapRow = row - top
             bitMapCol = col - left
             return self._shape[bitMapRow][bitMapCol]
+
+    """
+    def activeTetrominoExists(self):
+        return self._activeTetromino is not None
+
+    def spawnTetromino(self):
+        shapeOptions = ["I", "J", "L", "O", "S", "Z", "T"]
+        self._activeTetromino = Tetromino(1, self.getNumCols() / 2, random.choice(shapeOptions))
+
+    def moveTetromino(self):
+        self._activeTetromino.setRow(self._activeTetromino.getRow() + 1)
+    """

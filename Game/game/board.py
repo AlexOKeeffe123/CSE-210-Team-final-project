@@ -57,15 +57,5 @@ class Board():
             return self._activeTetromino.getColor()
         else:
             return self._grid[row][col].getColor()
-
-    def activeTetrominoExists(self):
-        return self._activeTetromino is not None
-
-    def spawnTetromino(self):
-        shapeOptions = ["I", "J", "L", "O", "S", "Z", "T"]
-        self._activeTetromino = Tetromino(1, self.getNumCols() / 2, random.choice(shapeOptions))
-
-    def moveTetromino(self):
-        self._activeTetromino.setRow(self._activeTetromino.getRow() + 1)
         
 
