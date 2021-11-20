@@ -65,7 +65,7 @@ class Board():
         shapeOptions = ["I", "J", "L", "O", "S", "Z", "T"]
         self._activeTetromino = Tetromino(1, self.getNumCols() / 2, random.choice(shapeOptions))
 
-    def moveTetromino(self):
+    def moveTetromino(self, delta_time: float):
         self._activeTetromino.setRow(self._activeTetromino.getRow() + 1)
         
 

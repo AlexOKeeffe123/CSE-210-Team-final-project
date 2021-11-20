@@ -25,6 +25,8 @@ class Director(arcade.Window):
         # Create your sprites and sprite lists here
         self.board = Board()
         self.board.spawnTetromino()
+        print(self.board)
+        arcade.schedule(self.board.moveTetromino, 3.0)
 
     def on_draw(self):
         """
@@ -35,17 +37,17 @@ class Director(arcade.Window):
         # the screen to the background color, and erase what we drew last frame.
         arcade.start_render()
 
-        xCenter = SCREEN_WIDTH / 2
-        yCenter = SCREEN_HEIGHT / 2
+        xBoardCenter = SCREEN_WIDTH / 2
+        yBoardCenter = SCREEN_HEIGHT / 2
 
         boardWidth = self.board.getNumCols() * BRICK_LENGTH
         boardHeight = self.board.getNumRows() * BRICK_LENGTH
-        arcade.draw_rectangle_filled(xCenter, yCenter, boardWidth, boardHeight, arcade.color.AFRICAN_VIOLET)
+        #arcade.draw_rectangle_filled(xCenter, yCenter, boardWidth, boardHeight, arcade.color.AFRICAN_VIOLET)
 
         for i in range(0, self.board.getNumRows()):
             for j in range(0, self.board.getNumCols()):
-                xPos = (xCenter - (boardWidth / 2)) + (BRICK_LENGTH * j)
-                yPos = (yCenter + (boardHeight / 2)) - (BRICK_LENGTH * i)
+                xPos = (xBoardCenter - (boardWidth / 2)) + (BRICK_LENGTH * j)
+                yPos = (yBoardCenter + (boardHeight / 2)) - (BRICK_LENGTH * i)
                 arcade.draw_lrtb_rectangle_filled(xPos, xPos + BRICK_LENGTH, yPos + BRICK_LENGTH, yPos, self.board.getColorAt(i, j))
                 arcade.draw_lrtb_rectangle_outline(xPos, xPos + BRICK_LENGTH, yPos + BRICK_LENGTH, yPos, (255, 255, 255, 100))
 
@@ -59,7 +61,7 @@ class Director(arcade.Window):
         Normally, you'll call update() on the sprite lists that
         need it.
         """
-        self.board.moveTetromino()
+        pass
 
     def on_key_press(self, key, key_modifiers):
         """
@@ -86,7 +88,7 @@ class Director(arcade.Window):
         """
         Called when the user presses a mouse button.
         """
-        pass
+        pass#self.board.moveTetromino()
 
     def on_mouse_release(self, x, y, button, key_modifiers):
         """
