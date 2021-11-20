@@ -30,16 +30,13 @@ class Director(arcade.Window):
         """ Set up the game variables. Call to re-start the game. """
         # Create your sprites and sprite lists here
         arcade.set_background_color(arcade.color.AMAZON)
-        self.numCols = 2
+        self.numCols = 10
         self.numRows = 20
 
-        self.active_tetromino = arcade.Sprite("Game/game/Assets/tetris/tetrisO.png", SCALING, hit_box_algorithm = "Detailed") 
-        self.active_tetromino.center_y = self.height / 2
-        self.active_tetromino.center_x = self.width / 2
-
+        self.spawnTetromino()
         self.createBorders()
 
-        arcade.schedule(self.moveTetromino, 3.0)
+        arcade.schedule(self.moveTetromino, 0.25)
 
     def on_draw(self):
         """
@@ -51,7 +48,10 @@ class Director(arcade.Window):
         arcade.start_render()
         # Call draw() on all your sprite lists below
 
-        #self.active_tetromino.draw()
+        if self.active_tetromino != None:
+            self.active_tetromino.draw()
+        self.tetromino_list.draw()
+        self.border_list.draw()
 
         arcade.finish_render()
 
@@ -61,7 +61,11 @@ class Director(arcade.Window):
         Normally, you'll call update() on the sprite lists that
         need it.
         """
-        pass
+        colision = arcade.check_for_collision_with_list(self.active_tetromino,(self.tetromino_list or self.border_list))
+        if colision:
+            self.moveTetromino(0, False)
+            self.tetromino_list.append(self.active_tetromino)
+            self.spawnTetromino()
 
     def on_key_press(self, key, key_modifiers):
         """
@@ -78,24 +82,48 @@ class Director(arcade.Window):
         """
         pass
 
-    def moveTetromino(self, delta_time):
-        yPos = self.active_tetromino._get_center_y()
-        self.active_tetromino._set_center_y(yPos - BRICK_LENGTH)
+    def spawnTetromino(self):
+        self.active_tetromino = arcade.Sprite("Game/game/Assets/tetris/tetrisO.png", SCALING, hit_box_algorithm = "Detailed")
+        
+        if True: #isEven(tetrominoWidth) and isEven(self.numCols)
+            self.active_tetromino.center_x = self.xBoardCenter - (BRICK_LENGTH / 2)
+        else:
+            self.active_tetromino.center_x = self.xBoardCenter
+
+        if False: #isEven(tetrominoHeight) and isEven(self.numRows)
+            self.active_tetromino.center_x = self.yBoardCenter - (BRICK_LENGTH / 2)
+        else:
+            self.active_tetromino.center_y = self.yBoardCenter
+
+    def moveTetromino(self, delta_time, goingDown = True):
+        if self.active_tetromino != None:
+            yPos = self.active_tetromino._get_center_y()
+
+            deltaY = BRICK_LENGTH
+            if goingDown:
+                deltaY *= -1
+
+            self.active_tetromino._set_center_y(yPos + deltaY)
 
     def createBorders(self):
-        boardWidth = self.numCols * BRICK_LENGTH
-        boardHeight = self.numRows * BRICK_LENGTH
-
         borders = self.border_list
+        adjNumCols = self.numCols + 2
+        adjNumRows = self.numRows + 1
 
-        for i in range(0, self.numRows):
-            for j in range(0, self.numCols):
-                borderBlock = arcade.sprite("Game/game/Assets/tetris/Border Square.png")
+        for i in range(0, adjNumRows):
+            for j in range(0, adjNumCols):
+                if i == 0 or j % (adjNumCols - 1) == 0:
+                    borderBlock = arcade.Sprite("Game/game/Assets/tetris/Border Square.png")
 
-                xOffset = 0
-                if self.numCols % 2 == 0:
-                    offset = BRICK_LENGTH / 2
+                    # xOffset = 0
+                    # if self.numCols % 2 == 0:
+                    #     xOffset = BRICK_LENGTH / 2
 
-                borderBlock.center_x = xScreenCenter - xOffset
-                borderBlock.center_y = yScreenCenter
-                borders.append()
+                    # yOffset = 0
+                    # if self.numCols % 2 == 0:
+                    #     yOffset = BRICK_LENGTH / 2
+
+                    borderBlock.center_x = self.xBoardCenter - 0 + ((j - (adjNumCols / 2)) * BRICK_LENGTH) 
+                    borderBlock.center_y = self.yBoardCenter + 0 + ((i - (adjNumRows / 2)) * BRICK_LENGTH)
+
+                    borders.append(borderBlock)
