@@ -1,8 +1,8 @@
+import random
 import arcade
 from arcade.sprite import Sprite
 from game.constants import SCREEN_HEIGHT, SCREEN_WIDTH, BRICK_LENGTH, SCALING
 from game.board import Board
-
 
 class Director(arcade.Window):
     """
@@ -83,9 +83,12 @@ class Director(arcade.Window):
         Called whenever the user lets off a previously pressed key.
         """
         pass
-
+#Game/game/Assets/tetris/tetrisO.png
     def spawnTetromino(self):
-        self.active_tetromino = arcade.Sprite("Game/game/Assets/tetris/tetrisO.png", SCALING, hit_box_algorithm = "Detailed")
+        tetromino_list=["tetrisI.png", "tetrisJ.png", "tetrisL.png", "tetrisO", "tetrisS.png", "tetrisT.png", "tetrisZ.png"]
+        random_tetromino= random.choice(tetromino_list)
+        tetromino_file = (f"Game/game/Assets/tetris/"+{random_tetromino})
+        self.active_tetromino = arcade.Sprite(tetromino_file, SCALING, hit_box_algorithm = "Detailed")
         
         if True: #isEven(tetrominoWidth) and isEven(self.numCols)
             self.active_tetromino.center_x = self.xBoardCenter - (BRICK_LENGTH / 2)
