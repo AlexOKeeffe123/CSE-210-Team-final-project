@@ -1,71 +1,82 @@
-
-
+from game.constants import SCALING, BRICK_LENGTH
 
 import arcade
 
+class Tetromino(arcade.Sprite):
+    def __init__(self, filename = "Game/game/Assets/image/Grid Square.png", scale = SCALING):
+        super().__init__(filename, scale)
 
-class Tetromino():
-    def __init__(self, row, col, shape):
-        #top left corner
-        self._row = row
-        self._col = col
+        type = filename[-5]
+        if type == "I":
+            custom_hit_box = [[-2, -0.5], [-2, 0.5], [2, 0.5], [2, -0.5]]
+            self.relativeCenter = [0, 0.5]
+        elif type == "J":
+            custom_hit_box = [[-1.5, -1], [-1.5, 1], [-0.5, 1], [-0.5, 0], [1.5, 0], [1.5, -1]]
+            self.relativeCenter = [0, -0.5]
+        elif type == "L":
+            custom_hit_box = [[-1.5, -1], [-1.5, 0], [0.5, 0], [0.5, 1], [1.5, 1], [1.5, -1]]
+            self.relativeCenter = [0, -0.5]
+        elif type == "O":
+            custom_hit_box = [[-1, -1], [-1, 1], [1, 1], [1, -1]]
+            self.relativeCenter = [0, 0]
+        elif type == "S":
+            custom_hit_box = [[-1.5, -1], [-1.5, 0], [-0.5, 0], [-0.5, 1], [1.5, 1], [1.5, 0], [0.5, 0], [0.5, -1]]
+            self.relativeCenter = [0, 0.5]
+        elif type == "T":
+            custom_hit_box = [[-1.5, -1], [-1.5, 0], [-0.5, 0], [-0.5, 1], [0.5, 1], [0.5, 0], [1.5, 0], [1.5, -1]]
+            self.relativeCenter = [0, -0.5]
+        elif type == "Z":
+            custom_hit_box = [[-1.5, 0], [-1.5, 1], [0.5, 1], [0.5, 0], [1.5, 0], [1.5, -1], [-0.5, -1], [-0.5, 0]]
+            self.relativeCenter = [0, 0.5]
+        else:
+            custom_hit_box = [[-0.5, -0.5], [-0.5, 0.5], [0.5, 0.5], [0.5, -0.5]]
+            self.relativeCenter = [0, 0]
 
-        #if shape == "whatever"
-            #self._shape = bitMap
-            #self._color = color
-        self._shape = [[True]]
-        self._color = arcade.color.PURPLE
+        self.hit_box = list(map(lambda point: list(map(lambda coord: coord * BRICK_LENGTH, point)), custom_hit_box))
 
-    #[ [1, 1, 1]
-    #  [1, 0, 1]
-    #  [1, 0, 1]
-    #  [1, 1, 1] ]
+    def move(self, left = 0, right = 0, up = 0, down = 0):
+        deltaX = (right - left) * BRICK_LENGTH 
+        if deltaX != 0:
+            self._set_center_x(self._get_center_x() + deltaX)
 
-    #GETTERS
-    def getRow(self):
-        return int(self._row)
+        deltaY = (up - down) * BRICK_LENGTH
+        if deltaY != 0:
+            self._set_center_y(self._get_center_y() + deltaY)
 
-    def getCol(self):
-        return int(self._col)
+    def rotate(self):
+        self.turn_right()
+        newRelCenter = [self.relativeCenter[1], -self.relativeCenter[0]]
+        self._set_center_x(self._get_center_x() + (self.relativeCenter[0] - newRelCenter[0]) * BRICK_LENGTH)
+        self._set_center_y(self._get_center_y() + (self.relativeCenter[1] - newRelCenter[1]) * BRICK_LENGTH)
+        self.relativeCenter = newRelCenter
 
     def getWidth(self):
-        return len(self._shape[0])
+        if self.getAngle() == 90 or self.getAngle() == 270:
+            return int(self._get_height() / BRICK_LENGTH)
+        else:
+            return int(self._get_width() / BRICK_LENGTH)
 
     def getHeight(self):
-        return len(self._shape)
+        if self.getAngle() == 90 or self.getAngle() == 270:
+            return int(self._get_width() / BRICK_LENGTH)
+        else:
+            return int(self._get_height() / BRICK_LENGTH)
 
-    def getColor(self):
-        return self._color
+    def getAngle(self):
+        return ((abs(self.angle) / 90) % 4) * 90
 
-    #SETTERS
-    def setRow(self, row):
-        self._row = row
+    def reduceToBricks(self):
+        bricks = []
+        for row in range(0, self.getHeight()):
+            for col in range(0, self.getWidth()):
+                xPos = (self._get_center_x() - ((self.getWidth() / 2) * BRICK_LENGTH)) + (col * BRICK_LENGTH) + (BRICK_LENGTH / 2)
+                yPos = (self._get_center_y() - ((self.getHeight() / 2) * BRICK_LENGTH)) + (row * BRICK_LENGTH) + (BRICK_LENGTH / 2)
 
-    def setCol(self, col):
-        self._col = col
+                if self.collides_with_point([xPos, yPos]):
+                    brick = Tetromino()
+                    brick._set_center_x(xPos)
+                    brick._set_center_y(yPos)
+                    bricks.append(brick)
+        return bricks
 
-    #HELPERS
-    def collidesWithPoint(self, row, col):
-        left = self.getCol()
-        top = self.getRow()
-        right = left + self.getWidth() - 1
-        bottom = top + self.getHeight() - 1
-
-        #if collision exists with the space the bitmap takes up on the board
-        if row >= top and row <= bottom and col >= left and col <= right: 
-            #check the bitmap
-            bitMapRow = row - top
-            bitMapCol = col - left
-            return self._shape[bitMapRow][bitMapCol]
-
-    """
-    def activeTetrominoExists(self):
-        return self._activeTetromino is not None
-
-    def spawnTetromino(self):
-        shapeOptions = ["I", "J", "L", "O", "S", "Z", "T"]
-        self._activeTetromino = Tetromino(1, self.getNumCols() / 2, random.choice(shapeOptions))
-
-    def moveTetromino(self):
-        self._activeTetromino.setRow(self._activeTetromino.getRow() + 1)
-    """
+        
