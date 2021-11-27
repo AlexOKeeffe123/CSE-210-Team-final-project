@@ -27,7 +27,7 @@ class Director(arcade.Window):
         arcade.set_background_color(arcade.color.AMAZON)
         self.board = TetrisBoard(self.width / 2, self.width / 2, 10, 20)
 
-        #arcade.play_sound(arcade.load_sound("Game/game/Assets/sound/backgroundmusic.mp3"))
+        arcade.play_sound(arcade.load_sound("Game/game/Assets/sound/backgroundmusic.mp3"))
 
         arcade.schedule(self.board.update, 0.25)
 
