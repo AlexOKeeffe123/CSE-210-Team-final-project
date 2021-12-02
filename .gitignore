@@ -1,14 +1,2 @@
-Game/game/__pycache__/__init__.cpython-39.pyc
-Game/game/__pycache__/director.cpython-39.pyc
-Game/game/__pycache__/constants.cpython-39.pyc
-Game/game/__pycache__/board.cpython-39.pyc
-Game/game/__pycache__/tetromino.cpython-39.pyc
-Game/game/__pycache__/tetris_board.cpython-39.pyc
 .DS_Store
-Game/game/__pycache__/tetris_board.cpython-39.pyc
-Game/game/__pycache__/boxed_grid.cpython-39.pyc
-Game/game/__pycache__/tetris_board.cpython-39.pyc
-Game/game/__pycache__/tetromino_buffer.cpython-39.pyc
-Game/game/__pycache__/tetris_grid.cpython-39.pyc
-Game/game/__pycache__/tetris_board.cpython-39.pyc
-Game/game/__pycache__/tetris_board.cpython-39.pyc
+*.pyc
