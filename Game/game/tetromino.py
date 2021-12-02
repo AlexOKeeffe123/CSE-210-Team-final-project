@@ -1,9 +1,11 @@
-from game.constants import SCALING, BRICK_LENGTH
-
+from game.constants import SCALING, BRICK_LENGTH, TETROMINO_FILEPATHS, TETROMINO_BRICK_FILEPATH
+import random
 import arcade
 
 class Tetromino(arcade.Sprite):
-    def __init__(self, filename = "Game/game/Assets/image/Grid Square.png", scale = SCALING):
+    def __init__(self, filename = None, scale = SCALING):
+        if filename == None:
+            filename = random.choice(TETROMINO_FILEPATHS)
         super().__init__(filename, scale)
 
         type = filename[-5]
@@ -73,7 +75,7 @@ class Tetromino(arcade.Sprite):
                 yPos = (self._get_center_y() - ((self.getHeight() / 2) * BRICK_LENGTH)) + (row * BRICK_LENGTH) + (BRICK_LENGTH / 2)
 
                 if self.collides_with_point([xPos, yPos]):
-                    brick = Tetromino()
+                    brick = Tetromino(TETROMINO_BRICK_FILEPATH)
                     brick._set_center_x(xPos)
                     brick._set_center_y(yPos)
                     bricks.append(brick)

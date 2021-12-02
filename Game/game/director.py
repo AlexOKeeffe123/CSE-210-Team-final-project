@@ -62,12 +62,14 @@ class Director(arcade.Window):
         """
         if key == 65361 or key == 97: # left or a
             self.board.active_tetromino.move(left=1)
-        if key == 65362 or key == 119 or key == 124: # up or w or spacebar
+        if key == 65362 or key == 119: # up or w
             self.board.active_tetromino.rotate()
         if key == 65363 or key == 100: # right or d
             self.board.active_tetromino.move(right=1)
         if key == 65364 or key == 115: # down or s
             self.board.active_tetromino.move(down=1)
+        if key == 32:
+            self.board.swapActiveTetromino()
         self.board.checkForCollisions()
 
     def on_key_release(self, key, key_modifiers):
