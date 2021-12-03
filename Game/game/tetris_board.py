@@ -1,4 +1,5 @@
 import arcade
+from arcade.key import T
 from game.tetromino import Tetromino
 from game.tetris_grid import TetrisGrid
 from game.tetromino_buffer import TetrominoBuffer
@@ -8,7 +9,7 @@ from game.constants import BRICK_LENGTH, TEXT_COLOR
 #TODO: Figure out how to make a grid that doesn't look like crap
 
 class TetrisBoard(TetrisGrid):
-    def __init__(self, x, y, width = 10, height = 20, color = None):
+    def __init__(self, didLose, didWin, x, y, width = 10, height = 20, color = None):
         #enforce minimum size
         if width < 5:
             width = 5
@@ -29,9 +30,17 @@ class TetrisBoard(TetrisGrid):
 
         #stats
         self._score = 0
+        self._high_score = 0
         self._canSwap = True
 
+        #evenHandlers
+        self.didLose = didLose
+        self.didWin = didWin
+
     def update(self, delta_time):
+        if self._score > 1000:
+            self.didWin()
+
         self.active_tetromino.move(down=1)
         self.handleCollisions()
 
@@ -42,11 +51,22 @@ class TetrisBoard(TetrisGrid):
         #self.active_tetromino.draw_hit_box(arcade.color.RED)
         #self._dropped_bricks.draw_hit_boxes(arcade.color.RED)
 
-        arcade.draw_text(f"Score: {self._score}", self.xCenter - 75, self.convertGridToPixel(y=-3), TEXT_COLOR, 16, align="center", width=150)    
+        arcade.draw_text(f"Score: {self._score}", self.xCenter - 75, self.convertGridToPixel(y=-3), TEXT_COLOR, 16, align="center", width=150)   
         arcade.draw_text("Rotate: W   Left: A   Down: S   Right: D", self.xCenter - 250, self.convertGridToPixel(y=-5), TEXT_COLOR, 16, align="center", width=500)    
         arcade.draw_text("Space Bar: Store Tetromino", self.xCenter - 250, self.convertGridToPixel(y=-7), TEXT_COLOR, 16, align="center", width=500)    
 
+        #High Score
+        arcade.draw_text(f"High Score: {self._high_score}", self.xCenter - -30, self.convertGridToPixel(y=7), arcade.color.BLACK, 16, align="center", width=300)    
+
+
+
     def handleCollisions(self):
+        if len(self._dropped_bricks) != 0:
+            self._dropped_bricks.sort(key=lambda brick: brick.center_y, reverse=True)
+            if arcade.check_for_collision_with_list(self._dropped_bricks[0], self.topBorder):
+                self.didLose()
+                return
+
         if arcade.check_for_collision_with_lists(self.active_tetromino, [self._dropped_bricks, self.bottomBorder]):
             self.active_tetromino.move(up=1)
             self._dropped_bricks.extend(self.active_tetromino.reduceToBricks())
