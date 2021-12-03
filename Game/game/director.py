@@ -1,9 +1,8 @@
 import arcade
 from arcade.key import DOWN
-from arcade.sprite import Sprite
-from game.tetromino import Tetromino
-from game.constants import SCREEN_HEIGHT, SCREEN_WIDTH, BRICK_LENGTH, SCALING
+from game.constants import BOARD_COLORS
 from game.tetris_board import TetrisBoard
+import random
 
 
 class Director(arcade.Window):
@@ -24,8 +23,8 @@ class Director(arcade.Window):
     def setup(self):
         """ Set up the game variables. Call to re-start the game. """
         # Create your sprites and sprite lists here
-        arcade.set_background_color(arcade.color.AMAZON)
-        self.board = TetrisBoard(self.width / 2, self.width / 2, 10, 20)
+        arcade.set_background_color(arcade.color.WHITE_SMOKE)
+        self.board = TetrisBoard(self.width / 2, self.height / 2, 10, 20, random.choice(BOARD_COLORS))
 
         arcade.play_sound(arcade.load_sound("Game/game/Assets/sound/backgroundmusic.mp3"))
 
@@ -70,7 +69,7 @@ class Director(arcade.Window):
             self.board.active_tetromino.move(down=1)
         if key == 32:
             self.board.swapActiveTetromino()
-        self.board.checkForCollisions()
+        self.board.handleCollisions()
 
     def on_key_release(self, key, key_modifiers):
         """

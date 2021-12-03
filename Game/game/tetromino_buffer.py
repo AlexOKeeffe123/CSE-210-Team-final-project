@@ -5,8 +5,8 @@ from game.tetris_grid import TetrisGrid
 
 #drawn from top left corner
 class TetrominoBuffer(TetrisGrid):
-    def __init__(self, xPos, yPos, size):
-        super().__init__(xPos, yPos, 6, size * 3 + 1, True)
+    def __init__(self, xPos, yPos, size, color = None):
+        super().__init__(xPos, yPos, 6, size * 3 + 1, color=color)
         self._tetrominos = []
         self._size = size
 

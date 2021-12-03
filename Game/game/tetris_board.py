@@ -3,26 +3,26 @@ from game.tetromino import Tetromino
 from game.tetris_grid import TetrisGrid
 from game.tetromino_buffer import TetrominoBuffer
 
-from game.constants import BRICK_LENGTH
+from game.constants import BRICK_LENGTH, TEXT_COLOR
 
 #TODO: Figure out how to make a grid that doesn't look like crap
 
 class TetrisBoard(TetrisGrid):
-    def __init__(self, x, y, width = 10, height = 20):
+    def __init__(self, x, y, width = 10, height = 20, color = None):
         #enforce minimum size
         if width < 5:
             width = 5
         if height < 5:
             height = 5
-        super().__init__(x, y, width, height)
+        super().__init__(x, y, width, height, color=color)
 
         #init active_tetromino and _next_buffer
         self.active_tetromino = None
-        self._next_buffer = TetrominoBuffer(self.convertGridToPixel(x=width + 4), self.convertGridToPixel(y=height - 5), 3)
+        self._next_buffer = TetrominoBuffer(self.convertGridToPixel(x=width + 4), self.convertGridToPixel(y=height - 5), 3, color)
         self._next_buffer.populate()
         self._activateNextTetromino()
 
-        self._swap_buffer = TetrominoBuffer(self.convertGridToPixel(x=-4), self.convertGridToPixel(y=height - 2), 1)
+        self._swap_buffer = TetrominoBuffer(self.convertGridToPixel(x=-4), self.convertGridToPixel(y=height - 2), 1, color)
         self._dropped_bricks = arcade.SpriteList()
 
         self._allSprites = [self.active_tetromino, self._dropped_bricks, self._next_buffer, self._swap_buffer, super()]
@@ -33,20 +33,20 @@ class TetrisBoard(TetrisGrid):
 
     def update(self, delta_time):
         self.active_tetromino.move(down=1)
-        self.checkForCollisions()
+        self.handleCollisions()
 
     def draw(self):
         for sprToDraw in self._allSprites:
             sprToDraw.draw()
 
         #self.active_tetromino.draw_hit_box(arcade.color.RED)
-        self._dropped_bricks.draw_hit_boxes(arcade.color.RED)
+        #self._dropped_bricks.draw_hit_boxes(arcade.color.RED)
 
-        arcade.draw_text(f"Score: {self._score}", self.xCenter - 75, self.convertGridToPixel(y=-3), arcade.color.WHITE, 16, align="center", width=150)    
-        arcade.draw_text("Rotate: W   Left: A   Down: S   Right: D", self.xCenter - 250, self.convertGridToPixel(y=-5), arcade.color.WHITE, 16, align="center", width=500)    
-        arcade.draw_text("Space Bar: Store Tetromino", self.xCenter - 250, self.convertGridToPixel(y=-7), arcade.color.WHITE, 16, align="center", width=500)    
+        arcade.draw_text(f"Score: {self._score}", self.xCenter - 75, self.convertGridToPixel(y=-3), TEXT_COLOR, 16, align="center", width=150)    
+        arcade.draw_text("Rotate: W   Left: A   Down: S   Right: D", self.xCenter - 250, self.convertGridToPixel(y=-5), TEXT_COLOR, 16, align="center", width=500)    
+        arcade.draw_text("Space Bar: Store Tetromino", self.xCenter - 250, self.convertGridToPixel(y=-7), TEXT_COLOR, 16, align="center", width=500)    
 
-    def checkForCollisions(self):
+    def handleCollisions(self):
         if arcade.check_for_collision_with_lists(self.active_tetromino, [self._dropped_bricks, self.bottomBorder]):
             self.active_tetromino.move(up=1)
             self._dropped_bricks.extend(self.active_tetromino.reduceToBricks())
@@ -87,7 +87,7 @@ class TetrisBoard(TetrisGrid):
         falling_bricks = []
         for brick in self._dropped_bricks:
             if brick.center_y > yPos:
-                brick.color = arcade.color.RED
+                #brick.color = arcade.color.RED
                 falling_bricks.append(brick)
 
         falling_bricks.sort(key=lambda brick: brick.center_y)
