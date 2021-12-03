@@ -24,14 +24,13 @@ class Director(arcade.View):
         self.width = SCREEN_WIDTH
         self.height = SCREEN_HEIGHT
 
-    def setup(self):
+    def setup(self, level = 0):
         """ Set up the game variables. Call to re-start the game. """
         # Create your sprites and sprite lists here
         arcade.set_background_color(arcade.color.WHITE_SMOKE)
-        self.board = TetrisBoard(self.width / 2, self.height / 2, 10, 20, random.choice(BOARD_COLORS))
+        self.board = TetrisBoard(self.didLose, self.didWin, self.width / 2, self.height / 2, 10, 20, random.choice(BOARD_COLORS))
 
-        self.sound.play_startup_music()
-
+        arcade.play_sound(arcade.load_sound("Game/game/Assets/sound/backgroundmusic.mp3"))
         arcade.schedule(self.board.update, 0.25)
 
     def on_draw(self):
@@ -80,3 +79,9 @@ class Director(arcade.View):
         Called whenever the user lets off a previously pressed key.
         """
         pass
+
+    def didWin(self):
+        print("didWin")
+
+    def didLose(self):
+        print("didLose")
