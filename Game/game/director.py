@@ -1,11 +1,12 @@
 import arcade
 from arcade.key import DOWN
-from game.constants import BOARD_COLORS
+from game.constants import BOARD_COLORS, SCREEN_HEIGHT, SCREEN_WIDTH
 from game.tetris_board import TetrisBoard
 import random
+from game.sound import sounds
 
 
-class Director(arcade.Window):
+class Director(arcade.View):
     """
     Main application class.
 
@@ -14,11 +15,14 @@ class Director(arcade.Window):
     with your own code. Don't leave 'pass' in this program.
     """
 
-    def __init__(self, width, height, title):
-        super().__init__(width, height, title)
+    def __init__(self):
+        super().__init__()
         # If you have sprite lists, you should create them here,
         # and set them to None
         self.board = None
+        self.sound = sounds()
+        self.width = SCREEN_WIDTH
+        self.height = SCREEN_HEIGHT
 
     def setup(self):
         """ Set up the game variables. Call to re-start the game. """
@@ -26,7 +30,7 @@ class Director(arcade.Window):
         arcade.set_background_color(arcade.color.WHITE_SMOKE)
         self.board = TetrisBoard(self.width / 2, self.height / 2, 10, 20, random.choice(BOARD_COLORS))
 
-        arcade.play_sound(arcade.load_sound("Game/game/Assets/sound/backgroundmusic.mp3"))
+        self.sound.play_startup_music()
 
         arcade.schedule(self.board.update, 0.25)
 
