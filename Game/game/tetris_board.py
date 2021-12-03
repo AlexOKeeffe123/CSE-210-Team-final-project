@@ -30,6 +30,7 @@ class TetrisBoard(TetrisGrid):
 
         #stats
         self._score = 0
+        self._high_score = 0
         self._canSwap = True
 
         #evenHandlers
@@ -50,9 +51,14 @@ class TetrisBoard(TetrisGrid):
         #self.active_tetromino.draw_hit_box(arcade.color.RED)
         #self._dropped_bricks.draw_hit_boxes(arcade.color.RED)
 
-        arcade.draw_text(f"Score: {self._score}", self.xCenter - 75, self.convertGridToPixel(y=-3), TEXT_COLOR, 16, align="center", width=150)    
+        arcade.draw_text(f"Score: {self._score}", self.xCenter - 75, self.convertGridToPixel(y=-3), TEXT_COLOR, 16, align="center", width=150)   
         arcade.draw_text("Rotate: W   Left: A   Down: S   Right: D", self.xCenter - 250, self.convertGridToPixel(y=-5), TEXT_COLOR, 16, align="center", width=500)    
         arcade.draw_text("Space Bar: Store Tetromino", self.xCenter - 250, self.convertGridToPixel(y=-7), TEXT_COLOR, 16, align="center", width=500)    
+
+        #High Score
+        arcade.draw_text(f"High Score: {self._high_score}", self.xCenter - -30, self.convertGridToPixel(y=7), arcade.color.BLACK, 16, align="center", width=300)    
+
+
 
     def handleCollisions(self):
         if len(self._dropped_bricks) != 0:
