@@ -106,6 +106,7 @@ class Director(arcade.View):
         self.window.show_view(end_view)
 
     def endRound(self):
+        self.sound.stopMusic()
         arcade.unschedule(self.board.update)
         self.window.total_score += self.board.getScore()
 
