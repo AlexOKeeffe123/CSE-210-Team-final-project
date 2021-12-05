@@ -2,7 +2,7 @@ import arcade
 from game.constants import TETROMINO_SOUND_PATH
 
 
-class sounds():
+class SoundManager():
     def __init__(self):
         self.background_music = arcade.load_sound(TETROMINO_SOUND_PATH[0])
         self.gameover_sound = arcade.load_sound(TETROMINO_SOUND_PATH[1])

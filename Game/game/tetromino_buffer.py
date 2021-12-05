@@ -1,9 +1,6 @@
-
 from game.tetromino import Tetromino
 from game.tetris_grid import TetrisGrid
 
-
-#drawn from top left corner
 class TetrominoBuffer(TetrisGrid):
     def __init__(self, xPos, yPos, size, color = None):
         super().__init__(xPos, yPos, 6, size * 3 + 1, color=color)
@@ -26,7 +23,6 @@ class TetrominoBuffer(TetrisGrid):
     def populate(self):
         for _ in range(0, self._size):
             self.enqeue(Tetromino())
-        print("done")
 
     def deqeue(self):
         return self._tetrominos.pop()

@@ -1,17 +1,16 @@
 
 import arcade
 from arcade.sprite import Sprite
-from game.tetromino import Tetromino
 from game.constants import BRICK_LENGTH, HALF_BRICK_LENGTH, SCALING
 
 class TetrisGrid():
     def __init__(self, x, y, width, height, showGrid = True, color = None):
-        self.xCenter = x #+ ((width / 2) * BRICK_LENGTH)
-        self.yCenter = y #- ((height / 2) * BRICK_LENGTH)
+        self._xCenter = x
+        self._yCenter = y
         self._width = width
         self._height = height
-        self._showGrid = showGrid
-        self._color = color
+        self.showGrid = showGrid
+        self.color = color
 
         #init borders
         self.topBorder = arcade.SpriteList()
@@ -26,12 +25,12 @@ class TetrisGrid():
         for sprToDraw in self.allBorders:
             sprToDraw.draw()
 
-        if self._showGrid:
+        if self.showGrid:
             left = self.convertGridToPixel(x=0) - HALF_BRICK_LENGTH
             right = self.convertGridToPixel(x=self._width) - HALF_BRICK_LENGTH
             bottom = self.convertGridToPixel(y=0) - HALF_BRICK_LENGTH
             top = self.convertGridToPixel(y=self._height) - HALF_BRICK_LENGTH
-            color = (self._color[0], self._color[1], self._color[2], 255 / 2) if self._color != None else (0, 0, 0, 255 / 2)
+            color = (self.color[0], self.color[1], self.color[2], 255 / 2) if self.color != None else (0, 0, 0, 255 / 2)
 
             for pos in range(bottom, top, BRICK_LENGTH):
                 arcade.draw_line(left, pos, right, pos, color)
@@ -46,11 +45,29 @@ class TetrisGrid():
             #         xPos = self.convertGridToPixel(x=column)
             #         arcade.draw_point(xPos, yPos, arcade.color.PURPLE, 5)
 
+    def getCenterX(self):
+        return self._xCenter
+
+    def getCenterY(self):
+        return self._yCenter
+
+    def getWidth(self):
+        return (self._width + 2) * BRICK_LENGTH
+
+    def getHeight(self):
+        return (self._height + 2) * BRICK_LENGTH
+
+    def getTop(self):
+        return self.getCenterY() + (self.getHeight() / 2)
+
+    def getBottom(self):
+        return self.getCenterY() - (self.getHeight() / 2)
+
     def snapToGrid(self, tetromino, x = None, y = None):
         if x == None:
             x = self._width / 2
         if y == None:
-            y = self._height + 2 #spawn at the top
+            y = self._height - 1 #spawn at the top
 
         coord = self.convertGridToPixel(x, y)
         tetromino.center_x = coord[0]
@@ -63,8 +80,8 @@ class TetrisGrid():
             tetromino.center_y -= HALF_BRICK_LENGTH
 
     def convertGridToPixel(self, x = None, y = None):
-        xPos = int((self.xCenter - ((self._width / 2) * BRICK_LENGTH)) + (x * BRICK_LENGTH)) if x != None else x
-        yPos = int((self.yCenter - ((self._height / 2) * BRICK_LENGTH)) + (y * BRICK_LENGTH))  if y != None else y
+        xPos = int((self._xCenter - ((self._width / 2) * BRICK_LENGTH)) + (x * BRICK_LENGTH)) if x != None else x
+        yPos = int((self._yCenter - ((self._height / 2) * BRICK_LENGTH)) + (y * BRICK_LENGTH))  if y != None else y
 
         if xPos != None and yPos != None:
             return [xPos, yPos]
@@ -81,11 +98,11 @@ class TetrisGrid():
             for j in range(0, adjNumCols):
                 if i % (adjNumRows - 1) == 0 or j % (adjNumCols - 1) == 0:
                     block = Sprite("Game/game/Assets/image/Border Square.png", SCALING)
-                    if self._color != None:
-                        block.color = self._color
+                    if self.color != None:
+                        block.color = self.color
 
-                    block.center_x = self.xCenter - 0 + ((j- (adjNumCols / 2)) * BRICK_LENGTH) 
-                    block.center_y = self.yCenter + 0 + ((i - (adjNumRows / 2)) * BRICK_LENGTH)
+                    block.center_x = self._xCenter - 0 + ((j- (adjNumCols / 2)) * BRICK_LENGTH) 
+                    block.center_y = self._yCenter + 0 + ((i - (adjNumRows / 2)) * BRICK_LENGTH)
 
                     if i == 0:
                         self.bottomBorder.append(block)
