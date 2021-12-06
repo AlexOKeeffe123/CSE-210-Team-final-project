@@ -101,7 +101,6 @@ class Director(arcade.View):
 
     def didLose(self):
         self.endRound()
-        self.window.level = 1
         end_view = game.game_views.GameOverView()
         self.window.show_view(end_view)
 
