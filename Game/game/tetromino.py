@@ -5,7 +5,7 @@ import arcade
 class Tetromino(arcade.Sprite):
     def __init__(self, filename = None, scale = SCALING, color = None):
         if filename == None:
-            filename =TETROMINO_FILEPATHS[0]#random.choice(TETROMINO_FILEPATHS)
+            filename =random.choice(TETROMINO_FILEPATHS)
 
         type = filename[-5]
         if type == "I":

@@ -17,7 +17,7 @@ class TitleView(arcade.View):
         arcade.draw_ellipse_filled(xCenter, yPosLogo, 625, 200, SMOKY_BLACK)
         arcade.draw_texture_rectangle(xCenter, yPosLogo, 500, 100, img)
 
-        arcade.draw_text("Every three levels it shrinks ( ͡° ͜ʖ ͡°)", xCenter, self.yPosByFifths(2.5), SMOKY_BLACK, font_size = 25, anchor_x="center")
+        arcade.draw_text("Every three levels it shrinks", xCenter, self.yPosByFifths(2.5), SMOKY_BLACK, font_size = 25, anchor_x="center")
 
         arcade.draw_text("Enter or click to start!", xCenter, self.yPosByFifths(3.5), SMOKY_BLACK, font_size = 25, anchor_x="center")
 
