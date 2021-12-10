@@ -17,11 +17,13 @@ class TitleView(arcade.View):
         arcade.draw_ellipse_filled(xCenter, yPosLogo, 625, 200, SMOKY_BLACK)
         arcade.draw_texture_rectangle(xCenter, yPosLogo, 500, 100, img)
 
-        arcade.draw_text("Enter or click to start!", xCenter, self.yPosByFifths(2.5), SMOKY_BLACK, font_size = 25, anchor_x="center")
+        arcade.draw_text("Every three levels it shrinks ( ͡° ͜ʖ ͡°)", xCenter, self.yPosByFifths(2.5), SMOKY_BLACK, font_size = 25, anchor_x="center")
 
-        arcade.draw_text("Space Bar: Store Tetromino", xCenter - 250, self.yPosByFifths(3.5), SMOKY_BLACK, 16, align="center", width=500)
-        arcade.draw_text("Rotate: W   Left: A   Down: S   Right: D", xCenter - 250, self.yPosByFifths(3.7), SMOKY_BLACK, 16, align="center", width=500)    
-        arcade.draw_text("Shift: Fast Fall", xCenter - 250, self.yPosByFifths(3.9), SMOKY_BLACK, 16, align="center", width=500)  
+        arcade.draw_text("Enter or click to start!", xCenter, self.yPosByFifths(3.5), SMOKY_BLACK, font_size = 25, anchor_x="center")
+
+        arcade.draw_text("Space Bar: Store Tetromino", xCenter - 250, self.yPosByFifths(4), SMOKY_BLACK, 16, align="center", width=500)
+        arcade.draw_text("Rotate: W   Left: A   Down: S   Right: D", xCenter - 250, self.yPosByFifths(4.2), SMOKY_BLACK, 16, align="center", width=500)    
+        arcade.draw_text("Shift: Fast Fall", xCenter - 250, self.yPosByFifths(4.4), SMOKY_BLACK, 16, align="center", width=500)  
         
         arcade.finish_render()
     
@@ -42,7 +44,7 @@ class TitleView(arcade.View):
         return (self.window.height / 5) * (5 - numerator)
 
     def startGame(self):
-        print("game started")
+        print("Game Started")
         self.window.level = 1
         self.window.total_score = 0
         game_view = game.director.Director()

@@ -1,16 +1,17 @@
 import arcade
-from game.constants import TEXT_COLOR
 from game.tetromino import Tetromino
 from game.tetris_grid import TetrisGrid
 from game.tetromino_buffer import TetrominoBuffer
 
 class TetrisBoard(TetrisGrid):
     def __init__(self, didLose, didWin, scoreToWin, x, y, width = 10, height = 20, color = None):
+        width = int(width)
+        height = int(height)
         #enforce minimum size
         if width < 5:
             width = 5
-        if height < 5:
-            height = 5
+        if height < 7:
+            height = 7
         super().__init__(x, y, width, height, color=color)
 
         #init active_tetromino and _next_buffer
@@ -22,7 +23,7 @@ class TetrisBoard(TetrisGrid):
         self._swap_buffer = TetrominoBuffer(self.convertGridToPixel(x=-4), self.convertGridToPixel(y=height - 2), 1, color)
         self._dropped_bricks = arcade.SpriteList()
 
-        self._allSprites = [self._dropped_bricks, self._next_buffer, self._swap_buffer, super(), self._active_tetromino]
+        self._allSprites = [self._dropped_bricks, self._next_buffer, self._swap_buffer, self._active_tetromino, super()]
 
         #stats
         self._score = 0
@@ -44,7 +45,7 @@ class TetrisBoard(TetrisGrid):
             self.didWin()
 
         self._active_tetromino.move(down=1)
-        self._handleCollisions()
+        self._handleCollisions(up=1)
 
     def draw(self):
         for sprToDraw in self._allSprites:
@@ -52,9 +53,13 @@ class TetrisBoard(TetrisGrid):
 
     def moveTetromino(self, left = 0, right = 0, up = 0, down = 0):
         self._active_tetromino.move(left, right, up, down)
+        self._handleCollisions(right, left, down, up)
+
+    def rotateTetromino(self):
+        self._active_tetromino.rotate()
         self._handleCollisions()
 
-    def _handleCollisions(self):
+    def _handleCollisions(self, left = 0, right = 0, up = 0, down = 0):
         if len(self._dropped_bricks) != 0:
             self._dropped_bricks.sort(key=lambda brick: brick.center_y, reverse=True)
             if self._dropped_bricks[0].top + 1 >= self.topBorder[0].bottom:
@@ -62,9 +67,10 @@ class TetrisBoard(TetrisGrid):
                 return
 
         if arcade.check_for_collision_with_lists(self._active_tetromino, [self._dropped_bricks, self.bottomBorder]):
-            self._active_tetromino.move(up=1)
-            self._dropped_bricks.extend(self._active_tetromino.reduceToBricks())
-            self._updateActiveTetromino()
+            self._active_tetromino.move(left, right, up, down)
+            if up == 1:
+                self._dropped_bricks.extend(self._active_tetromino.reduceToBricks())
+                self._updateActiveTetromino()
 
             rowNumber = 0
             countCleared = 0
@@ -79,8 +85,10 @@ class TetrisBoard(TetrisGrid):
         elif arcade.check_for_collision_with_list(self._active_tetromino, self.leftBorder):
             self._active_tetromino.move(left=1)
         elif arcade.check_for_collision_with_list(self._active_tetromino, self.rightBorder):
-            #TODO:Fix bug - light blue, rotating on right wall causes clipping.
+            #TODO: Fix bug - light blue, rotating on right wall causes clipping.
             self._active_tetromino.move(right=1)
+        elif arcade.check_for_collision_with_list(self._active_tetromino, self.topBorder):
+            self._active_tetromino.move(down=1)
 
     def _isRowComplete(self, rowNumber):
         isComplete = True

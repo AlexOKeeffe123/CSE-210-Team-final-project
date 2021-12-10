@@ -28,10 +28,15 @@ class Director(arcade.View):
         """ Set up the game variables. Call to re-start the game. """
         # Create your sprites and sprite lists here
         arcade.set_background_color(arcade.color.WHITE_SMOKE)
-        self.speed = 1 - (((self.window.level - 1) % 12) * 0.08)
+        self.speed = 1 - (((self.window.level - 1) % 3) * 0.45)
         levelUpScore = 250 * self.window.level
+        boardHeight = 20 - (((self.window.level - 1) / 3) * 5)
 
-        self.board = TetrisBoard(self.didLose, self.didWin, levelUpScore, self.width / 2, self.height / 2, 10, 20, random.choice(BOARD_COLORS))
+        #print(f"LEVEL: {self.window.level}")
+        #print(f"HEIGHT: {boardHeight}")
+        #print(f"SPEED: {self.speed}")
+
+        self.board = TetrisBoard(self.didLose, self.didWin, levelUpScore, self.width / 2, self.height / 2, 10, boardHeight, random.choice(BOARD_COLORS))
         arcade.schedule(self.board.update, self.speed)
         self.sound.play_startup_music()
 
@@ -75,7 +80,7 @@ class Director(arcade.View):
         if key == 65361 or key == 97: # left or a
             self.board.moveTetromino(left=1)
         if key == 65362 or key == 119: # up or w
-            self.board._active_tetromino.rotate()
+            self.board.rotateTetromino()
             self.sound.play_tetris_drop_sound()
         if key == 65363 or key == 100: # right or d
             self.board.moveTetromino(right=1)
